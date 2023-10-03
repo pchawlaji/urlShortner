@@ -17,24 +17,27 @@ async function handleURLShortener(req, res) {
     const body = req.body
 
     // Validate the request body if original url is not provided
-    if (!body.url) { 
-      return res.status(400).json({ error: 'url is required' });
+    if (!body.url) {
+        return res.status(400).json({ error: 'url is required' });
     }
 
+    let { url: url } = body;
+
     // Check if the URL does not start with 'http://' and does not start with 'https://'
-    if (!body.url.startsWith('http://') && !body.url.startsWith('https://')) {
-        // If the condition is true, return a response with status code 400 and an error message
-        return res.status(400).json({ error: 'url must start with http:// or https://' });
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+        /** Add 'https://' to the URL since while redirecting it to the original 
+        URL without the https the new entry is thrown back to the system */
+        url = 'https://' + url
     }
 
     // Check if the URL already exists
-    const existingDocument = await URL.findOne({ originalUrl: body.url })
+    const existingDocument = await URL.findOne({ originalUrl: url })
 
     // Return the short URL
     if (existingDocument) {
         console.log('URL already exists')
         return res.json({
-            originalUrl: body.url,
+            originalUrl: url,
             shortUrl: existingDocument.shortUrl
         })
     }
@@ -45,13 +48,13 @@ async function handleURLShortener(req, res) {
     // Create a new URL
     await URL.create({
         shortUrl: shortID,
-        originalUrl: body.url,
+        originalUrl: url,
         visitHistory: []
     })
 
     // Return the short URL
     res.json({
-        originalUrl: body.url,
+        originalUrl: url,
         shortUrl: shortID
     })
 }

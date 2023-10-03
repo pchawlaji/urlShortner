@@ -13,10 +13,10 @@ The service also records the site visits done by a user.
 Method: POST
 Description: Generates a new short URL and returns the shortend URL
 
-2. /:id
+2. /:shortId
 Method: GET
 Description: Redirects the user to the original url
 
-3. /analytics/:id
+3. /analytics/:shortId
 Method: GET
 Description: Fetches the traffic data on a particular website
