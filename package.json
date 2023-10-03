@@ -2,9 +2,9 @@
   "name": "urlshortner",
   "version": "1.0.0",
   "description": "This service shortens the url of a website",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "nodemon app.js"
   },
   "author": "",
   "license": "ISC",

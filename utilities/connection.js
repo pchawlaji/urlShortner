@@ -15,6 +15,8 @@ async function connectToMongoDB() {
         .replace('<database>', process.env.MONGODB_DATABASE_NAME)
         .replace('<cluster>', process.env.MONGODB_CLUSTER);
 
+        console.log(mongoDBUrl)
+
     try { await mongoose.connect(mongoDBUrl) } catch (err) {
         console.log(err);
         throw new Error('Could not connect to MongoDB: ' + err);

@@ -1,5 +1,5 @@
 const { randomIdGenerator } = require('../utilities/randomIdGenerator');
-const URL = require('../models/url');
+const URL = require('../models/modelUrl');
 
 const SHORT_ID_LENGTH = 8
 
@@ -17,15 +17,17 @@ async function handleURLShortener(req, res) {
     const body = req.body
 
     // Validate the request body if original url is not provided
-    if (!body.url) {
-        return res.status(400).json({ error: 'url is required' })
+    if (!body.url) { 
+      return res.status(400).json({ error: 'url is required' });
     }
 
+    // Check if the URL does not start with 'http://' and does not start with 'https://'
     if (!body.url.startsWith('http://') && !body.url.startsWith('https://')) {
-        return res.status(400).json({ error: 'url must start with http:// or https://' })
+        // If the condition is true, return a response with status code 400 and an error message
+        return res.status(400).json({ error: 'url must start with http:// or https://' });
     }
 
-    // // Check if the URL already exists
+    // Check if the URL already exists
     const existingDocument = await URL.findOne({ originalUrl: body.url })
 
     // Return the short URL
@@ -54,21 +56,21 @@ async function handleURLShortener(req, res) {
     })
 }
 
+/**
+ * Generates a random ID and checks if it already exists in the database.
+ *
+ * @return {Promise<string>} A unique short ID.
+ */
 async function generateID() {
 
     // Generate a random ID
     let shortID = randomIdGenerator(SHORT_ID_LENGTH);
 
-    console.log('shortID: ', shortID);
-
-    // // Check if the URL already exists
+    // Check if the URL already exists
     const existingShortID = await URL.findOne({ shortUrl: shortID });
 
-    if (existingShortID) {
-        return await generateID();
-    } else {
-        return shortID;
-    }
+    // Return the short URL
+    return existingShortID ? await generateID() : shortID;
 }
 
 
